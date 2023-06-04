@@ -1,0 +1,117 @@
+<div class="col-md-12">
+  <div class="row">
+    <div class="col-6  col-sm-6 col-md-1 ">
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+        data-bs-whatever="@mdo"><i class="fa fa-plus-square" (click)="newClient()"></i>NEW</button>
+    </div>
+
+    <div class="col-6 col-sm-6 col-md-2 ">
+      <button type="button" class="btn btn-primary" (click)="download()"><i class=" fa fa-share-square-o"></i>EXPORT ALL</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="col-md-3" style="margin-top: 4%;">
+  <div class="row">
+
+    <div class="input-group mb-3">
+      <input [(ngModel)]="searchSK"  type="text" class="form-control" placeholder="Enter Shared Key"  aria-describedby="button-addon2" >  
+      <button *ngIf="!isSearch" class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="searchSharedKey()">Search</button>
+      <button *ngIf="isSearch" class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="searchSharedKey()">Clear</button>
+    </div>
+
+  </div>
+</div>
+
+
+<div class="col-md-12 " style="margin-top: 4%;">
+  <div class="table-responsive">
+    <table class="table">
+      <thead class="table-info">
+        <tr>
+          <th scope="col">Shared Key</th>
+          <th scope="col">Business ID</th>
+          <th scope="col">Phone</th>
+          <th scope="col">E-mail</th>
+          <th scope="col">Data Start</th>
+          <th scope="col">Data End</th>
+          <th scope="col"> <i class="fa fa-pencil"></i> </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of listClient">
+          <th>{{item.sharedKey}}</th>
+          <td>{{item.name}}</td>
+          <td>{{item.phone}}</td>
+          <td>{{item.email}}</td>
+          <td>{{item.startDate}}</td>
+          <td>{{item.endDate}}</td>
+          <td>
+            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#exampleModal"
+              (click)="selectItem(item)"> <i class="fa fa-pencil"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 *ngIf="!isUpdate" class="modal-title fs-5" id="exampleModalLabel">Create New Client</h1>
+        <h1 *ngIf="isUpdate" class="modal-title fs-5" id="exampleModalLabel">Uppdate Client</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="newClient()"></button>
+      </div>
+      <form [formGroup]="formClient" >
+        <div class="modal-body">
+
+          <div class="mb-3" >
+            <label for="exampleInputEmail1" class="form-label">Name</label>
+            <input   formControlName="name" type="text" class="form-control" aria-describedby="name"   >  
+          </div>
+          
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Phone</label>
+            <input formControlName="phone" type="text" class="form-control" id="name" aria-describedby="name">
+            <div *ngIf="formClient.get('phone')?.hasError('minlength')">
+              El número de teléfono debe tener al menos 7 caracteres.
+            </div>
+            <div *ngIf="formClient.get('phone')?.hasError('maxLength') || (formClient.get('phone')?.value?.length > 10)">
+              El número de teléfono debe tener como máximo 10 caracteres.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">E-mail</label>
+            <input  formControlName="email" type="email" class="form-control" id="exampleInputEmail1"
+              aria-describedby="emailHelp">
+              <div *ngIf="formClient.get('email')?.hasError('email') && (formClient.get('email')?.dirty || formClient.get('email')?.touched)">
+                El formato del correo electrónico es inválido.
+              </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="startDate" class="form-label">Start Date</label>
+            <input  formControlName="startDate" type="date" class="form-control" id="startDate">
+          </div>
+          <div class="mb-3">
+            <label for="endDate" class="form-label">End Date</label>
+            <input  formControlName="endDate" type="date" class="form-control" id="endDate">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button *ngIf="!isUpdate" type="submit" class="btn btn-primary" (click)="save()">Save</button>
+          <button *ngIf="isUpdate" type="submit" class="btn btn-primary" data-bs-dismiss="modal" (click)="newClient()"
+            aria-label="Close">Update</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
